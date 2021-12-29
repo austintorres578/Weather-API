@@ -1,0 +1,56 @@
+body{
+  margin: 0px;
+  padding: 0px;
+}
+
+.weather-menu-container{
+  position: relative;
+  background-color: gray;
+  height: 100vh;
+}
+.weather-menu{
+  position: absolute;
+  text-align: center;
+  background-color: lightblue;
+  height: 400px;
+  width: 70%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.weather-information-container{
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+  margin-bottom: 50px;
+}
+.weather-text{
+  text-align: left;
+  padding-top: 10px;
+}
+.temperture-text{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 50px;
+}
+.location-text{
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.feels-like-text{
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.weather-input-container{
+  width: 100%;
+}
+.weather-input-container input{
+  height: 28px;
+  font-size: 15px;
+  width: 70%;
+}
+.weather-input-container button{
+  font-size: 16px;
+  height: 35px;
+  width: 20%;
+}
