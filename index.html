@@ -13,13 +13,31 @@
       <div class="weather-information-container">
         <div class="weather-temperture">
           <p id="temperture-text" class="temperture-text"></p>
-        </div>
-        <div class="weather-text">
           <p id="location-text" class="location-text"></p>
           <p id="feels-like-text" class="feels-like-text"></p>
         </div>
+        <div id="weather-images-container" class="weather-images-container">
+          <img src="images\icons\cloudy.png" alt="" srcset="">
+        </div>
       </div>
-      <div class="weather-input-container">
+      <div id="weather-catagories-container" class="weather-catagories-container">
+        <div class="humidity-container">
+          <p class="humidity-header">Humidity</p>
+          <img src="images\icons\humidity.png" alt="">
+          <p class="humidity-subtitle" id="humidity-subtitle"></p>
+        </div>
+        <div class="wind-container">
+          <p class="wind-header">Wind</p>
+          <img src="images\icons\wind.png" alt="">
+          <p class="wind-subtitle" id="wind-subtitle"></p>
+        </div>
+        <div class="ultraviolet-container">
+          <p class="ultraviolet-header">UV Rating</p>
+          <img src="images\icons\ultraviolet-icon.jpg" alt="">
+          <p class="ultraviolet-subtitle" id="ultraviolet-subtitle"></p>
+        </div>
+      </div>
+      <div id="weather-input-container" class="weather-input-container">
         <input type="text" name="" id="zip-input" class="zip-input" placeholder="Enter ZipCode">
         <button id="submit-button" class="submit-button">Submit</button>
       </div>
