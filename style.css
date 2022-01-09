@@ -21,7 +21,7 @@ body{
 
 .weather-menu-container{
   position: relative;
-  background-image: url(https://wallpapercave.com/wp/wp7399540.jpg);
+  background-image: url("images/backgrounds/wp7399540.webp");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

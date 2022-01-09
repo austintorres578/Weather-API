@@ -313,6 +313,7 @@ let dataUltraviolet;
 let dataCloud;
 let dataTimeDay;
 let dataTimeCode;
+let dataIconCode;
 
 submitButton.addEventListener("click",test);
 
@@ -333,12 +334,14 @@ fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e94422290121
     windText.innerText=data.current.wind_mph+"mph";
     ultravioletText.innerText=data.current.uv+"/10"
     feel.innerText="Feels like "+dataFeel;
-	weatherImage.src="http:"+dataTimeDay;
     dataTimeCode=data.current.condition.code
 
-	
     console.log(data);
     console.log(dataTimeCode);
+    console.log(dataTimeDay);
+    codeReciever();
+    weatherImageMaker();
+    console.log(dataIconCode);
 })
 .then(()=>{
     weatherImagesContainer.style.display="block";
@@ -348,3 +351,21 @@ fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e94422290121
 .catch(error=>alert("Invalid Zipcode"))
 };
 
+function codeReciever(){
+    for (let i = 0; dataDayCodes[i].code<=dataTimeCode; i++){
+        dataIconCode=dataDayCodes[i].icon;
+    };
+};
+function weatherImageMaker(){
+    if(dataTimeday="//cdn.weatherapi.com/weather/64x64/night/"+dataIconCode+".png"){
+        let dataNightImageSrc;
+        dataNightImageSrc="images/icons/weather/64x64/night/"+dataIconCode+".png";
+        weatherImage.src=dataNightImageSrc;
+        weatherMenuContainer.style.backgroundImage="url(images/backgrounds/nightsky.jpg)";
+    }else{
+        let dataDayImageSrc;
+        dataDayImageSrc="images/icons/weather/64x64/day/"+dataIconCode+".png";
+        weatherImage.src=dataDayImageSrc;
+        weatherMenuContainer.style.backgroundImage="url(images/backgrounds/wp7399540.webp)";
+    }
+};
