@@ -1,17 +1,30 @@
+//Zipcode Submission variables
+const weatherInputContainer=document.getElementById("weather-input-container");
+const zipInput=document.getElementById("zip-input");
+const submitButton=document.getElementById("submit-button");
+
+//Operator Buttons
+const xButton = document.getElementById("x-button");
+xButton.addEventListener("click", test)
+
+// Completed Menu Text Variables
 const temperture=document.getElementById("temperture-text");
 const locationText=document.getElementById("location-text");
 const humidityText=document.getElementById("humidity-subtitle");
 const windText=document.getElementById("wind-subtitle");
 const ultravioletText=document.getElementById("ultraviolet-subtitle");
 const feel=document.getElementById("feels-like-text");
-const zipInput=document.getElementById("zip-input");
-const submitButton=document.getElementById("submit-button");
+
+//Weather Catagories and Images
 const weatherImagesContainer=document.getElementById("weather-images-container");
 const weatherCatagoriesContainer=document.getElementById("weather-catagories-container");
-const weatherInputContainer=document.getElementById("weather-input-container");
 const weatherImage=document.getElementById("weather-image");
-const weatherMenuContainer = document.getElementById("weather-menu-container");
 
+//Weather Menu Container
+const weatherMenuContainer = document.getElementById("weather-menu-container");
+const weatherInformationContainer=document.getElementById("weather-information-container");
+
+// API Code List
 const dataDayCodes=[
 {
     "code" : 1000,
@@ -315,9 +328,9 @@ let dataTimeDay;
 let dataTimeCode;
 let dataIconCode;
 
-submitButton.addEventListener("click",test);
+submitButton.addEventListener("click",callApi);
 
-function test(){
+function callApi(){
 fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+zipInput.value+"&aqi=no")
 .then(Response => Response.json())
 .then(data => {
@@ -344,8 +357,10 @@ fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e94422290121
     console.log(dataIconCode);
 })
 .then(()=>{
+    xButton.style.display="block";
     weatherImagesContainer.style.display="block";
     weatherCatagoriesContainer.style.display="flex";
+    weatherInformationContainer.style.display="flex";
     weatherInputContainer.style.display="none";
 })
 .catch(error=>alert("Invalid Zipcode"))
@@ -368,4 +383,13 @@ function weatherImageMaker(){
         weatherImage.src=dataDayImageSrc;
         weatherMenuContainer.style.backgroundImage="url(images/backgrounds/wp7399540.webp)";
     }
+};
+
+function test(){
+    xButton.style.display="none";
+    weatherImagesContainer.style.display="none";
+    weatherCatagoriesContainer.style.display="none";
+    weatherInformationContainer.style.display="none";
+    weatherInputContainer.style.display="block";
+    weatherMenuContainer.style.backgroundImage="url(images/backgrounds/wp7399540.webp)";
 };

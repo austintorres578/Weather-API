@@ -31,7 +31,6 @@ body{
   position: absolute;
   text-align: center;
   box-shadow: black 5px;
-  padding-top: 75px;
   background-color: rgba(196, 196, 196, 0.651);
   border-radius: 5px;
   height: 400px;
@@ -40,8 +39,25 @@ body{
   top: 50%;
   transform: translate(-50%, -50%);
 }
+.x-button{
+  display: none;
+  cursor: pointer;
+  margin-left: 90%;
+  margin-top: 15px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  height: 25px;
+  width: 35px;
+}
+.x-button i{
+  font-size: 26px;
+  transition: .3s;
+}
+.x-button i:hover{
+  color: red;
+}
 .weather-information-container{
-  display: flex;
+  display: none;
   justify-content: space-evenly;
   padding-top: 50px;
   margin-bottom: 50px;
@@ -107,6 +123,7 @@ body{
   margin-bottom: 0px;
 }
 .weather-input-container{
+  padding-top: 75px;
   width: 100%;
 }
 .weather-input-container input{
