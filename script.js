@@ -5,7 +5,15 @@ const submitButton=document.getElementById("submit-button");
 
 //Operator Buttons
 const xButton = document.getElementById("x-button");
-xButton.addEventListener("click", test)
+const favoriteButton = document.getElementById("favorite-button");
+const unfavoriteButton = document.getElementById("unfavorite-button");
+const historyButton=document.getElementById("history-button");
+const closeHistoryButton=document.getElementById("close-history-button");
+xButton.addEventListener("click", closeZip);
+favoriteButton.addEventListener("click",favoriteZip);
+unfavoriteButton.addEventListener("click",unfavoriteZip);
+historyButton.addEventListener("click", toggleHistory);
+closeHistoryButton.addEventListener("click",closeHistory);
 
 // Completed Menu Text Variables
 const temperture=document.getElementById("temperture-text");
@@ -23,6 +31,7 @@ const weatherImage=document.getElementById("weather-image");
 //Weather Menu Container
 const weatherMenuContainer = document.getElementById("weather-menu-container");
 const weatherInformationContainer=document.getElementById("weather-information-container");
+const weatherHistoryMenuDesk = document.getElementById("weather-history-menu-desk");
 
 // API Code List
 const dataDayCodes=[
@@ -327,6 +336,43 @@ let dataCloud;
 let dataTimeDay;
 let dataTimeCode;
 let dataIconCode;
+let zipSearchHistory=[];
+let zipSearchHistoryLocal;
+let usableZipSearchHistory=JSON.parse(localStorage.getItem("history"));
+let citySearchHistory=[];
+let citySearchHistoryLocal;
+let usableCitySearchHistory=JSON.parse(localStorage.getItem("city-history"));
+let stateSearchHistory=[];
+let stateSearchHistoryLocal;
+let usableStateSearchHistory=JSON.parse(localStorage.getItem("state-history"));
+
+window.onload= multipleFunction();
+
+function multipleFunction(){
+    console.log("passed to multiple");
+    settingHistoryArray();
+    settingCityHistoryArray();
+    settingStateHistoryArray();
+};
+
+function settingHistoryArray(){
+    console.log("passed to history");
+    if(usableZipSearchHistory!=null){
+    zipSearchHistory=usableZipSearchHistory;
+    };
+};
+function settingCityHistoryArray(){
+    console.log("passed to city history");
+    if(usableCitySearchHistory!=null){
+    citySearchHistory=usableCitySearchHistory;
+    };
+};
+function settingStateHistoryArray(){
+    console.log("passed to state history");
+    if(usableStateSearchHistory!=null){
+    stateSearchHistory=usableStateSearchHistory;
+    };
+};
 
 submitButton.addEventListener("click",callApi);
 
@@ -334,7 +380,15 @@ function callApi(){
 fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+zipInput.value+"&aqi=no")
 .then(Response => Response.json())
 .then(data => {
-    zipInput.value="";
+    zipSearchHistory.push(zipInput.value);
+    zipSearchHistoryLocal=JSON.stringify(zipSearchHistory);
+    localStorage.setItem("history",zipSearchHistoryLocal);
+    citySearchHistory.push(data.location.name);
+    citySearchHistoryLocal=JSON.stringify(citySearchHistory);
+    localStorage.setItem("city-history",citySearchHistoryLocal);
+    stateSearchHistory.push(data.location.region);
+    stateSearchHistoryLocal=JSON.stringify(stateSearchHistory);
+    localStorage.setItem("state-history",stateSearchHistoryLocal);
     dataFeel=data.current.feelslike_f+"℉";
     dataLocationCity=data.location.name;
     dataLocationState=data.location.region;
@@ -349,15 +403,16 @@ fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e94422290121
     feel.innerText="Feels like "+dataFeel;
     dataTimeCode=data.current.condition.code
 
+    console.log(usableZipSearchHistory);
+    console.log(usableCitySearchHistory);
     console.log(data);
-    console.log(dataTimeCode);
-    console.log(dataTimeDay);
+    console.log(data.location.name);
     codeReciever();
     weatherImageMaker();
-    console.log(dataIconCode);
 })
 .then(()=>{
     xButton.style.display="block";
+    favoriteButton.style.display="block"
     weatherImagesContainer.style.display="block";
     weatherCatagoriesContainer.style.display="flex";
     weatherInformationContainer.style.display="flex";
@@ -385,11 +440,35 @@ function weatherImageMaker(){
     }
 };
 
-function test(){
+function closeZip(){
+    zipInput.value="";
     xButton.style.display="none";
+    favoriteButton.style.display="none";
     weatherImagesContainer.style.display="none";
     weatherCatagoriesContainer.style.display="none";
     weatherInformationContainer.style.display="none";
     weatherInputContainer.style.display="block";
     weatherMenuContainer.style.backgroundImage="url(images/backgrounds/wp7399540.webp)";
+};
+function toggleHistory(){
+    historyButton.style.display="none";
+    closeHistoryButton.style.display="block";
+    weatherHistoryMenuDesk.style.right="86%";
+    console.log("success");
+};
+
+function closeHistory(){
+    historyButton.style.display="block";
+    closeHistoryButton.style.display="none";
+    weatherHistoryMenuDesk.style.right="100%";
+};
+
+function favoriteZip(){
+    favoriteButton.style.display="none";
+    unfavoriteButton.style.display="block";
+
+};
+function unfavoriteZip(){
+    favoriteButton.style.display="block";
+    unfavoriteButton.style.display="none";
 };

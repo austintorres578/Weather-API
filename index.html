@@ -10,8 +10,27 @@
 </head>
 <body>
   <div id="weather-menu-container" class="weather-menu-container">
+    <nav>
+      <div id="history-button" class="history-button">
+        <button>
+          <i class="fas fa-history"></i>
+        </button>
+      </div>
+      <div id="close-history-button" class="close-history-button">
+        <button>
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="website-name">
+        <p>WeatherBoy</p>
+      </div>
+    </nav>
     <div class="weather-menu">
-      <button class="x-button" id="x-button"><i class="fas fa-times"></i></button>
+      <div id="button-container" class="button-container">
+        <button id="favorite-button" class="favorite-button"><i class="fas fa-star"></i></button>
+        <button id="unfavorite-button" class="unfavorite-button"><i class="fas fa-star"></i></button>
+        <button class="x-button" id="x-button"><i class="fas fa-times"></i></button>
+      </div>
       <div id="weather-information-container" class="weather-information-container">
         <div class="weather-temperture">
           <p id="temperture-text" class="temperture-text"></p>
@@ -43,6 +62,12 @@
         <input type="text" name="" id="zip-input" class="zip-input" placeholder="Enter ZipCode">
         <button id="submit-button" class="submit-button">Submit</button>
       </div>
+    </div>
+    <div id="weather-history-menu-desk" class="weather-history-menu-desk">
+      <button class="weather-history-button-1">
+        <h2>07083</h2>
+        <p class="weather-location-1">Union, New Jersey</p>
+      </button>
     </div>
   </div>
   <script src="script.js"></script>
