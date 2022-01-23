@@ -3,7 +3,7 @@ const weatherInputContainer=document.getElementById("weather-input-container");
 const zipInput=document.getElementById("zip-input");
 const submitButton=document.getElementById("submit-button");
 
-//Operator Buttons
+//Operator Buttons---------------------------------------------------------------------
 const xButton = document.getElementById("x-button");
 const favoriteButton = document.getElementById("favorite-button");
 const unfavoriteButton = document.getElementById("unfavorite-button");
@@ -15,7 +15,7 @@ unfavoriteButton.addEventListener("click",unfavoriteZip);
 historyButton.addEventListener("click", toggleHistory);
 closeHistoryButton.addEventListener("click",closeHistory);
 
-// Completed Menu Text Variables
+// Completed Menu Text Variables--------------------------------------------------------
 const temperture=document.getElementById("temperture-text");
 const locationText=document.getElementById("location-text");
 const humidityText=document.getElementById("humidity-subtitle");
@@ -23,17 +23,17 @@ const windText=document.getElementById("wind-subtitle");
 const ultravioletText=document.getElementById("ultraviolet-subtitle");
 const feel=document.getElementById("feels-like-text");
 
-//Weather Catagories and Images
+//Weather Catagories and Images----------------------------------------------------------
 const weatherImagesContainer=document.getElementById("weather-images-container");
 const weatherCatagoriesContainer=document.getElementById("weather-catagories-container");
 const weatherImage=document.getElementById("weather-image");
 
-//Weather Menu Container
+//Weather Menu Container----------------------------------------------------------------
 const weatherMenuContainer = document.getElementById("weather-menu-container");
 const weatherInformationContainer=document.getElementById("weather-information-container");
 const weatherHistoryMenuDesk = document.getElementById("weather-history-menu-desk");
 
-// API Code List
+// API Code List---------------------------------------------------------------------------
 const dataDayCodes=[
 {
     "code" : 1000,
@@ -325,6 +325,8 @@ const dataDayCodes=[
 }
 ];
 
+//API Data variables----------------------------------------------------------------------
+
 let dataTemperture;
 let dataLocationCity;
 let dataLocationState;
@@ -336,6 +338,9 @@ let dataCloud;
 let dataTimeDay;
 let dataTimeCode;
 let dataIconCode;
+
+//Local storage variables --------------------------------------------------------------------------------
+
 let zipSearchHistory=[];
 let zipSearchHistoryLocal;
 let usableZipSearchHistory=JSON.parse(localStorage.getItem("history"));
@@ -345,34 +350,47 @@ let usableCitySearchHistory=JSON.parse(localStorage.getItem("city-history"));
 let stateSearchHistory=[];
 let stateSearchHistoryLocal;
 let usableStateSearchHistory=JSON.parse(localStorage.getItem("state-history"));
+let usableFavoriteZip = localStorage.getItem("favoriteZipCode");
+
+let createHistoryButton = document.createElement("button");
+let createHeader = document.createElement("h2");
+let createParagraph = document.createElement("p");
+
+// window.onload Functions------------------------------------------------------------------------------
 
 window.onload= multipleFunction();
 
 function multipleFunction(){
-    console.log("passed to multiple");
+    favoriteZipChecker();
     settingHistoryArray();
     settingCityHistoryArray();
     settingStateHistoryArray();
 };
 
+function favoriteZipChecker(){
+    if(usableFavoriteZip!=undefined){
+        openFavorite();
+    };
+};
+
 function settingHistoryArray(){
-    console.log("passed to history");
     if(usableZipSearchHistory!=null){
     zipSearchHistory=usableZipSearchHistory;
     };
 };
 function settingCityHistoryArray(){
-    console.log("passed to city history");
     if(usableCitySearchHistory!=null){
     citySearchHistory=usableCitySearchHistory;
     };
 };
 function settingStateHistoryArray(){
-    console.log("passed to state history");
     if(usableStateSearchHistory!=null){
     stateSearchHistory=usableStateSearchHistory;
     };
 };
+
+
+//API Fetching functions -------------------------------------------------------------------------------------
 
 submitButton.addEventListener("click",callApi);
 
@@ -380,6 +398,9 @@ function callApi(){
 fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+zipInput.value+"&aqi=no")
 .then(Response => Response.json())
 .then(data => {
+
+//Local Storage Creation
+    zipInputNumber=zipInput.value;
     zipSearchHistory.push(zipInput.value);
     zipSearchHistoryLocal=JSON.stringify(zipSearchHistory);
     localStorage.setItem("history",zipSearchHistoryLocal);
@@ -389,6 +410,8 @@ fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e94422290121
     stateSearchHistory.push(data.location.region);
     stateSearchHistoryLocal=JSON.stringify(stateSearchHistory);
     localStorage.setItem("state-history",stateSearchHistoryLocal);
+
+// Dom munipulation after submition of zip    
     dataFeel=data.current.feelslike_f+"℉";
     dataLocationCity=data.location.name;
     dataLocationState=data.location.region;
@@ -403,14 +426,9 @@ fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e94422290121
     feel.innerText="Feels like "+dataFeel;
     dataTimeCode=data.current.condition.code
 
-    console.log(usableZipSearchHistory);
-    console.log(usableCitySearchHistory);
-    console.log(data);
-    console.log(data.location.name);
     codeReciever();
     weatherImageMaker();
-})
-.then(()=>{
+}).then(()=>{
     xButton.style.display="block";
     favoriteButton.style.display="block"
     weatherImagesContainer.style.display="block";
@@ -420,6 +438,41 @@ fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e94422290121
 })
 .catch(error=>alert("Invalid Zipcode"))
 };
+
+function openFavorite(){
+    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+usableFavoriteZip+"&aqi=no")
+    .then(Response => Response.json())
+    .then(data => {
+    
+    // Dom munipulation after submition of zip    
+        dataFeel=data.current.feelslike_f+"℉";
+        dataLocationCity=data.location.name;
+        dataLocationState=data.location.region;
+        dataCloud=data.current.cloud;
+        dataTimeDay=data.current.condition.icon;
+        dataTemperture=data.current.temp_f+"℉";
+        temperture.innerText=dataTemperture;
+        locationText.innerText=dataLocationCity+", "+dataLocationState;
+        humidityText.innerText=data.current.humidity+"%";
+        windText.innerText=data.current.wind_mph+"mph";
+        ultravioletText.innerText=data.current.uv+"/10"
+        feel.innerText="Feels like "+dataFeel;
+        dataTimeCode=data.current.condition.code
+
+        codeReciever();
+        weatherImageMaker();
+    })
+    .then(()=>{
+        xButton.style.display="block";
+        unfavoriteButton.style.display="block"
+        weatherImagesContainer.style.display="block";
+        weatherCatagoriesContainer.style.display="flex";
+        weatherInformationContainer.style.display="flex";
+        weatherInputContainer.style.display="none";
+    })
+    .catch(error=>alert("Favorite Zip Error"))
+    };
+
 
 function codeReciever(){
     for (let i = 0; dataDayCodes[i].code<=dataTimeCode; i++){
@@ -440,6 +493,8 @@ function weatherImageMaker(){
     }
 };
 
+//Button Functions ----------------------------------------------------------------------------------------------
+
 function closeZip(){
     zipInput.value="";
     xButton.style.display="none";
@@ -449,12 +504,13 @@ function closeZip(){
     weatherInformationContainer.style.display="none";
     weatherInputContainer.style.display="block";
     weatherMenuContainer.style.backgroundImage="url(images/backgrounds/wp7399540.webp)";
+    favoriteButton.style.display="none";
+    unfavoriteButton.style.display="none";
 };
 function toggleHistory(){
     historyButton.style.display="none";
     closeHistoryButton.style.display="block";
     weatherHistoryMenuDesk.style.right="86%";
-    console.log("success");
 };
 
 function closeHistory(){
@@ -466,9 +522,11 @@ function closeHistory(){
 function favoriteZip(){
     favoriteButton.style.display="none";
     unfavoriteButton.style.display="block";
-
+    let favoriteZipCode = zipInput.value;
+    localStorage.setItem("favoriteZipCode", favoriteZipCode);
 };
 function unfavoriteZip(){
     favoriteButton.style.display="block";
     unfavoriteButton.style.display="none";
+    localStorage.removeItem("favoriteZipCode");
 };
