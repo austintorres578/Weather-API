@@ -26,12 +26,13 @@ const feel=document.getElementById("feels-like-text");
 //Weather Catagories and Images----------------------------------------------------------
 const weatherImagesContainer=document.getElementById("weather-images-container");
 const weatherCatagoriesContainer=document.getElementById("weather-catagories-container");
-const weatherImage=document.getElementById("weather-image");
+let weatherImage=document.getElementById("weather-image");
 
 //Weather Menu Container----------------------------------------------------------------
 const weatherMenuContainer = document.getElementById("weather-menu-container");
 const weatherInformationContainer=document.getElementById("weather-information-container");
 const weatherHistoryMenuDesk = document.getElementById("weather-history-menu-desk");
+const weatherHistoryList = document.getElementById("weather-history-list");
 
 // API Code List---------------------------------------------------------------------------
 const dataDayCodes=[
@@ -352,9 +353,6 @@ let stateSearchHistoryLocal;
 let usableStateSearchHistory=JSON.parse(localStorage.getItem("state-history"));
 let usableFavoriteZip = localStorage.getItem("favoriteZipCode");
 
-let createHistoryButton = document.createElement("button");
-let createHeader = document.createElement("h2");
-let createParagraph = document.createElement("p");
 
 // window.onload Functions------------------------------------------------------------------------------
 
@@ -362,6 +360,7 @@ window.onload= multipleFunction();
 
 function multipleFunction(){
     favoriteZipChecker();
+    historyButtonCreator();
     settingHistoryArray();
     settingCityHistoryArray();
     settingStateHistoryArray();
@@ -400,16 +399,33 @@ fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e94422290121
 .then(data => {
 
 //Local Storage Creation
+if(zipSearchHistory.length<5){
     zipInputNumber=zipInput.value;
-    zipSearchHistory.push(zipInput.value);
+    zipSearchHistory.unshift(zipInput.value);
     zipSearchHistoryLocal=JSON.stringify(zipSearchHistory);
     localStorage.setItem("history",zipSearchHistoryLocal);
-    citySearchHistory.push(data.location.name);
+    citySearchHistory.unshift(data.location.name);
     citySearchHistoryLocal=JSON.stringify(citySearchHistory);
     localStorage.setItem("city-history",citySearchHistoryLocal);
-    stateSearchHistory.push(data.location.region);
+    stateSearchHistory.unshift(data.location.region);
     stateSearchHistoryLocal=JSON.stringify(stateSearchHistory);
     localStorage.setItem("state-history",stateSearchHistoryLocal);
+}
+else{
+    zipInputNumber=zipInput.value;
+    zipSearchHistory.pop();
+    zipSearchHistory.unshift(zipInput.value);
+    zipSearchHistoryLocal=JSON.stringify(zipSearchHistory);
+    localStorage.setItem("history",zipSearchHistoryLocal);
+    citySearchHistory.pop();
+    citySearchHistory.unshift(data.location.name);
+    citySearchHistoryLocal=JSON.stringify(citySearchHistory);
+    localStorage.setItem("city-history",citySearchHistoryLocal);
+    stateSearchHistory.pop();
+    stateSearchHistory.unshift(data.location.region);
+    stateSearchHistoryLocal=JSON.stringify(stateSearchHistory);
+    localStorage.setItem("state-history",stateSearchHistoryLocal);
+};
 
 // Dom munipulation after submition of zip    
     dataFeel=data.current.feelslike_f+"℉";
@@ -424,7 +440,7 @@ fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e94422290121
     windText.innerText=data.current.wind_mph+"mph";
     ultravioletText.innerText=data.current.uv+"/10"
     feel.innerText="Feels like "+dataFeel;
-    dataTimeCode=data.current.condition.code
+    dataTimeCode=data.current.condition.code;
 
     codeReciever();
     weatherImageMaker();
@@ -455,10 +471,11 @@ function openFavorite(){
         locationText.innerText=dataLocationCity+", "+dataLocationState;
         humidityText.innerText=data.current.humidity+"%";
         windText.innerText=data.current.wind_mph+"mph";
-        ultravioletText.innerText=data.current.uv+"/10"
+        ultravioletText.innerText=data.current.uv+"/10";
         feel.innerText="Feels like "+dataFeel;
-        dataTimeCode=data.current.condition.code
+        dataTimeCode=data.current.condition.code;
 
+        console.log(data);
         codeReciever();
         weatherImageMaker();
     })
@@ -473,24 +490,27 @@ function openFavorite(){
     .catch(error=>alert("Favorite Zip Error"))
     };
 
-
 function codeReciever(){
     for (let i = 0; dataDayCodes[i].code<=dataTimeCode; i++){
         dataIconCode=dataDayCodes[i].icon;
     };
 };
 function weatherImageMaker(){
-    if(dataTimeday="//cdn.weatherapi.com/weather/64x64/night/"+dataIconCode+".png"){
+    console.log(dataTimeDay);
+    if(dataTimeDay="//cdn.weatherapi.com/weather/64x64/night/"+dataIconCode+".png"){
         let dataNightImageSrc;
         dataNightImageSrc="images/icons/weather/64x64/night/"+dataIconCode+".png";
         weatherImage.src=dataNightImageSrc;
         weatherMenuContainer.style.backgroundImage="url(images/backgrounds/nightsky.jpg)";
+        console.log("ran night");
     }else{
         let dataDayImageSrc;
         dataDayImageSrc="images/icons/weather/64x64/day/"+dataIconCode+".png";
         weatherImage.src=dataDayImageSrc;
         weatherMenuContainer.style.backgroundImage="url(images/backgrounds/wp7399540.webp)";
-    }
+        console.log("ran day");
+    };
+    console.log(dataTimeDay);
 };
 
 //Button Functions ----------------------------------------------------------------------------------------------
@@ -530,3 +550,25 @@ function unfavoriteZip(){
     unfavoriteButton.style.display="none";
     localStorage.removeItem("favoriteZipCode");
 };
+function historyButtonCreator(){
+    if(usableZipSearchHistory!=null){
+        for (let i = 0; i <usableZipSearchHistory.length; i++){
+            if(i<5){
+            const createLiElement = document.createElement("li");
+            const createButtonElement = document.createElement("button");
+            const createH2Element = document.createElement("h2");
+            const createPElement = document.createElement("p");
+
+            createLiElement;
+            createButtonElement.id="history-button-"+[i];
+            createH2Element.innerHTML=usableZipSearchHistory[i];
+            createPElement.innerHTML=usableCitySearchHistory[i]+", "+usableStateSearchHistory[i];
+
+            weatherHistoryList.appendChild(createLiElement);
+            createLiElement.appendChild(createButtonElement);
+            createButtonElement.appendChild(createH2Element);
+            createButtonElement.appendChild(createPElement);
+            }
+        };
+     };
+ };
