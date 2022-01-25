@@ -496,21 +496,19 @@ function codeReciever(){
     };
 };
 function weatherImageMaker(){
-    console.log(dataTimeDay);
-    if(dataTimeDay="//cdn.weatherapi.com/weather/64x64/night/"+dataIconCode+".png"){
+    console.log(dataTimeDay+" before if");
+    if(dataTimeDay=="//cdn.weatherapi.com/weather/64x64/night/"+dataIconCode+".png"){
         let dataNightImageSrc;
         dataNightImageSrc="images/icons/weather/64x64/night/"+dataIconCode+".png";
         weatherImage.src=dataNightImageSrc;
         weatherMenuContainer.style.backgroundImage="url(images/backgrounds/nightsky.jpg)";
-        console.log("ran night");
     }else{
         let dataDayImageSrc;
         dataDayImageSrc="images/icons/weather/64x64/day/"+dataIconCode+".png";
         weatherImage.src=dataDayImageSrc;
         weatherMenuContainer.style.backgroundImage="url(images/backgrounds/wp7399540.webp)";
-        console.log("ran day");
     };
-    console.log(dataTimeDay);
+    console.log(dataTimeDay+" after if");
 };
 
 //Button Functions ----------------------------------------------------------------------------------------------
