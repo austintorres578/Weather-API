@@ -395,7 +395,13 @@ submitButton.addEventListener("click",callApi);
 
 function callApi(){
 fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+zipInput.value+"&aqi=no")
-.then(Response => Response.json())
+.then(Response => {
+    console.log(Response.status)
+    if(Response.status===400){
+        throw new error("invalid zip")
+    }
+    return Response.json();
+})
 .then(data => {
 
 //Local Storage Creation
@@ -457,10 +463,14 @@ else{
 
 function openFavorite(){
     fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+usableFavoriteZip+"&aqi=no")
-    .then(Response => Response.json())
+    .then(Response => {
+        console.log(Response.status);
+        return Response.json();
+    })
     .then(data => {
     
-    // Dom munipulation after submition of zip    
+    // Dom munipulation after submition of zip  
+        
         dataFeel=data.current.feelslike_f+"℉";
         dataLocationCity=data.location.name;
         dataLocationState=data.location.region;
@@ -496,7 +506,6 @@ function codeReciever(){
     };
 };
 function weatherImageMaker(){
-    console.log(dataTimeDay+" before if");
     if(dataTimeDay=="//cdn.weatherapi.com/weather/64x64/night/"+dataIconCode+".png"){
         let dataNightImageSrc;
         dataNightImageSrc="images/icons/weather/64x64/night/"+dataIconCode+".png";
@@ -508,7 +517,6 @@ function weatherImageMaker(){
         weatherImage.src=dataDayImageSrc;
         weatherMenuContainer.style.backgroundImage="url(images/backgrounds/wp7399540.webp)";
     };
-    console.log(dataTimeDay+" after if");
 };
 
 //Button Functions ----------------------------------------------------------------------------------------------
