@@ -485,7 +485,6 @@ function openFavorite(){
         feel.innerText="Feels like "+dataFeel;
         dataTimeCode=data.current.condition.code;
 
-        console.log(data);
         codeReciever();
         weatherImageMaker();
     })
@@ -536,13 +535,13 @@ function closeZip(){
 function toggleHistory(){
     historyButton.style.display="none";
     closeHistoryButton.style.display="block";
-    weatherHistoryMenuDesk.style.right="86%";
+    weatherHistoryMenuDesk.style.display="block"
 };
 
 function closeHistory(){
     historyButton.style.display="block";
     closeHistoryButton.style.display="none";
-    weatherHistoryMenuDesk.style.right="100%";
+    weatherHistoryMenuDesk.style.display="none";
 };
 
 function favoriteZip(){
@@ -556,6 +555,9 @@ function unfavoriteZip(){
     unfavoriteButton.style.display="none";
     localStorage.removeItem("favoriteZipCode");
 };
+
+
+
 function historyButtonCreator(){
     if(usableZipSearchHistory!=null){
         for (let i = 0; i <usableZipSearchHistory.length; i++){
@@ -566,7 +568,7 @@ function historyButtonCreator(){
             const createPElement = document.createElement("p");
 
             createLiElement;
-            createButtonElement.id="history-button-"+[i];
+            createButtonElement.className="weather-history-button";
             createH2Element.innerHTML=usableZipSearchHistory[i];
             createPElement.innerHTML=usableCitySearchHistory[i]+", "+usableStateSearchHistory[i];
 
@@ -574,7 +576,218 @@ function historyButtonCreator(){
             createLiElement.appendChild(createButtonElement);
             createButtonElement.appendChild(createH2Element);
             createButtonElement.appendChild(createPElement);
+            
             }
         };
      };
  };
+ 
+const weatherHistoryButton = document.querySelectorAll('.weather-history-button');
+
+let historyIds=["firstHistoryButton","secondHistoryButton","thirdHistoryButton","fourthHistoryButton","fifthHistoryButton"];
+
+let historyEvents=[firstHistoryButtonInfo,secondHistoryButtonInfo,thirdHistoryButtonInfo,fourthHistoryButtonInfo,fifthHistoryButtonInfo];
+
+for (let i = 0; i < weatherHistoryButton.length; i++) {
+    if(usableZipSearchHistory!=undefined){
+    weatherHistoryButton[i].id=historyIds[i];
+    weatherHistoryButton[i].addEventListener("click",historyEvents[i]);
+    }
+};
+
+function firstHistoryButtonInfo(){
+    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("firstHistoryButton").firstChild.innerHTML+"&aqi=no")
+    .then(Response => {
+        console.log(Response.status);
+        return Response.json();
+    })
+    .then(data => {
+    
+    // Dom munipulation after submition of zip  
+        zipInput.value=document.getElementById("firstHistoryButton").firstChild.innerHTML;
+        dataFeel=data.current.feelslike_f+"℉";
+        dataLocationCity=data.location.name;
+        dataLocationState=data.location.region;
+        dataCloud=data.current.cloud;
+        dataTimeDay=data.current.condition.icon;
+        dataTemperture=data.current.temp_f+"℉";
+        temperture.innerText=dataTemperture;
+        locationText.innerText=dataLocationCity+", "+dataLocationState;
+        humidityText.innerText=data.current.humidity+"%";
+        windText.innerText=data.current.wind_mph+"mph";
+        ultravioletText.innerText=data.current.uv+"/10";
+        feel.innerText="Feels like "+dataFeel;
+        dataTimeCode=data.current.condition.code;
+
+        codeReciever();
+        weatherImageMaker();
+    })
+    .then(()=>{
+        xButton.style.display="block";
+        unfavoriteButton.style.display="none";
+        favoriteButton.style.display="block";
+        weatherImagesContainer.style.display="block";
+        weatherCatagoriesContainer.style.display="flex";
+        weatherInformationContainer.style.display="flex";
+        weatherInputContainer.style.display="none";
+    })
+    .catch(error=>alert("Favorite Zip Error"))
+    };
+function secondHistoryButtonInfo(){
+    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("secondHistoryButton").firstChild.innerHTML+"&aqi=no")
+    .then(Response => {
+        console.log(Response.status);
+        return Response.json();
+    })
+    .then(data => {
+    
+    // Dom munipulation after submition of zip  
+        zipInput.value=document.getElementById("secondHistoryButton").firstChild.innerHTML;
+        dataFeel=data.current.feelslike_f+"℉";
+        dataLocationCity=data.location.name;
+        dataLocationState=data.location.region;
+        dataCloud=data.current.cloud;
+        dataTimeDay=data.current.condition.icon;
+        dataTemperture=data.current.temp_f+"℉";
+        temperture.innerText=dataTemperture;
+        locationText.innerText=dataLocationCity+", "+dataLocationState;
+        humidityText.innerText=data.current.humidity+"%";
+        windText.innerText=data.current.wind_mph+"mph";
+        ultravioletText.innerText=data.current.uv+"/10";
+        feel.innerText="Feels like "+dataFeel;
+        dataTimeCode=data.current.condition.code;
+
+        codeReciever();
+        weatherImageMaker();
+    })
+    .then(()=>{
+        xButton.style.display="block";
+        unfavoriteButton.style.display="none";
+        favoriteButton.style.display="block";
+        weatherImagesContainer.style.display="block";
+        weatherCatagoriesContainer.style.display="flex";
+        weatherInformationContainer.style.display="flex";
+        weatherInputContainer.style.display="none";
+    })
+    .catch(error=>alert("Favorite Zip Error"))
+    };
+function thirdHistoryButtonInfo(){
+    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("thirdHistoryButton").firstChild.innerHTML+"&aqi=no")
+    .then(Response => {
+        console.log(Response.status);
+        return Response.json();
+    })
+    .then(data => {
+    
+    // Dom munipulation after submition of zip  
+        zipInput.value=document.getElementById("thirdHistoryButton").firstChild.innerHTML;
+        dataFeel=data.current.feelslike_f+"℉";
+        dataLocationCity=data.location.name;
+        dataLocationState=data.location.region;
+        dataCloud=data.current.cloud;
+        dataTimeDay=data.current.condition.icon;
+        dataTemperture=data.current.temp_f+"℉";
+        temperture.innerText=dataTemperture;
+        locationText.innerText=dataLocationCity+", "+dataLocationState;
+        humidityText.innerText=data.current.humidity+"%";
+        windText.innerText=data.current.wind_mph+"mph";
+        ultravioletText.innerText=data.current.uv+"/10";
+        feel.innerText="Feels like "+dataFeel;
+        dataTimeCode=data.current.condition.code;
+
+        codeReciever();
+        weatherImageMaker();
+    })
+    .then(()=>{
+        xButton.style.display="block";
+        unfavoriteButton.style.display="none";
+        favoriteButton.style.display="block";
+        weatherImagesContainer.style.display="block";
+        weatherCatagoriesContainer.style.display="flex";
+        weatherInformationContainer.style.display="flex";
+        weatherInputContainer.style.display="none";
+    })
+    .catch(error=>alert("Favorite Zip Error"))
+    };
+function fourthHistoryButtonInfo(){
+    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("fourthHistoryButton").firstChild.innerHTML+"&aqi=no")
+    .then(Response => {
+        console.log(Response.status);
+        return Response.json();
+    })
+    .then(data => {
+    
+    // Dom munipulation after submition of zip  
+        zipInput.value = document.getElementById("fourthHistoryButton").firstChild.innerHTML;
+        dataFeel=data.current.feelslike_f+"℉";
+        dataLocationCity=data.location.name;
+        dataLocationState=data.location.region;
+        dataCloud=data.current.cloud;
+        dataTimeDay=data.current.condition.icon;
+        dataTemperture=data.current.temp_f+"℉";
+        temperture.innerText=dataTemperture;
+        locationText.innerText=dataLocationCity+", "+dataLocationState;
+        humidityText.innerText=data.current.humidity+"%";
+        windText.innerText=data.current.wind_mph+"mph";
+        ultravioletText.innerText=data.current.uv+"/10";
+        feel.innerText="Feels like "+dataFeel;
+        dataTimeCode=data.current.condition.code;
+
+        codeReciever();
+        weatherImageMaker();
+    })
+    .then(()=>{
+        xButton.style.display="block";
+        unfavoriteButton.style.display="none";
+        favoriteButton.style.display="block";
+        weatherImagesContainer.style.display="block";
+        weatherCatagoriesContainer.style.display="flex";
+        weatherInformationContainer.style.display="flex";
+        weatherInputContainer.style.display="none";
+    })
+    .catch(error=>alert("Favorite Zip Error"))
+    };
+function fifthHistoryButtonInfo(){
+    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("fifthHistoryButton").firstChild.innerHTML+"&aqi=no")
+    .then(Response => {
+        console.log(Response.status);
+        return Response.json();
+    })
+    .then(data => {
+    
+    // Dom munipulation after submition of zip  
+        zipInput.value=document.getElementById("fifthHistoryButton").firstChild.innerHTML;
+        dataFeel=data.current.feelslike_f+"℉";
+        dataLocationCity=data.location.name;
+        dataLocationState=data.location.region;
+        dataCloud=data.current.cloud;
+        dataTimeDay=data.current.condition.icon;
+        dataTemperture=data.current.temp_f+"℉";
+        temperture.innerText=dataTemperture;
+        locationText.innerText=dataLocationCity+", "+dataLocationState;
+        humidityText.innerText=data.current.humidity+"%";
+        windText.innerText=data.current.wind_mph+"mph";
+        ultravioletText.innerText=data.current.uv+"/10";
+        feel.innerText="Feels like "+dataFeel;
+        dataTimeCode=data.current.condition.code;
+
+        codeReciever();
+        weatherImageMaker();
+    })
+    .then(()=>{
+        xButton.style.display="block";
+        unfavoriteButton.style.display="none";
+        favoriteButton.style.display="block";
+        weatherImagesContainer.style.display="block";
+        weatherCatagoriesContainer.style.display="flex";
+        weatherInformationContainer.style.display="flex";
+        weatherInputContainer.style.display="none";
+    })
+    .catch(error=>alert("Favorite Zip Error"))
+    };
+
+
+
+
+
+

@@ -82,12 +82,12 @@ body nav{
   transform: translate(-50%, -50%);
 }
 .weather-history-menu-desk{
+  display: none;
   position: absolute;
   transition: .5s;
   background-color: rgba(99, 99, 99, 0.651);
   height: 95%; 
   width: 200px;
-  right: 100%;
 }
 .weather-history-menu-desk ul{
   list-style: none;
