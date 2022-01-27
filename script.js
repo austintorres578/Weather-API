@@ -19,6 +19,7 @@ closeHistoryButton.addEventListener("click",closeHistory);
 const temperture=document.getElementById("temperture-text");
 const locationText=document.getElementById("location-text");
 const humidityText=document.getElementById("humidity-subtitle");
+const weatherText=document.getElementById("weather-text");
 const windText=document.getElementById("wind-subtitle");
 const ultravioletText=document.getElementById("ultraviolet-subtitle");
 const feel=document.getElementById("feels-like-text");
@@ -331,6 +332,7 @@ const dataDayCodes=[
 let dataTemperture;
 let dataLocationCity;
 let dataLocationState;
+let dataWeatherText;
 let dataFeel;
 let dataHumidity;
 let dataWind;
@@ -437,9 +439,11 @@ else{
     dataFeel=data.current.feelslike_f+"℉";
     dataLocationCity=data.location.name;
     dataLocationState=data.location.region;
+    dataWeatherText=data.current.condition.text
     dataCloud=data.current.cloud;
     dataTimeDay=data.current.condition.icon;
     dataTemperture=data.current.temp_f+"℉";
+    weatherText.innerHTML=dataWeatherText;
     temperture.innerText=dataTemperture;
     locationText.innerText=dataLocationCity+", "+dataLocationState;
     humidityText.innerText=data.current.humidity+"%";
@@ -477,6 +481,8 @@ function openFavorite(){
         dataCloud=data.current.cloud;
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
+        dataWeatherText=data.current.condition.text;
+        weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
         humidityText.innerText=data.current.humidity+"%";
@@ -485,6 +491,7 @@ function openFavorite(){
         feel.innerText="Feels like "+dataFeel;
         dataTimeCode=data.current.condition.code;
 
+        console.log(data);
         codeReciever();
         weatherImageMaker();
     })
@@ -553,6 +560,7 @@ function favoriteZip(){
 function unfavoriteZip(){
     favoriteButton.style.display="block";
     unfavoriteButton.style.display="none";
+    favoriteZipCode = "";
     localStorage.removeItem("favoriteZipCode");
 };
 
@@ -611,6 +619,8 @@ function firstHistoryButtonInfo(){
         dataCloud=data.current.cloud;
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
+        dataWeatherText=data.current.condition.text;
+        weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
         humidityText.innerText=data.current.humidity+"%";
@@ -649,6 +659,8 @@ function secondHistoryButtonInfo(){
         dataCloud=data.current.cloud;
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
+        dataWeatherText=data.current.condition.text;
+        weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
         humidityText.innerText=data.current.humidity+"%";
@@ -687,6 +699,8 @@ function thirdHistoryButtonInfo(){
         dataCloud=data.current.cloud;
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
+        dataWeatherText=data.current.condition.text;
+        weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
         humidityText.innerText=data.current.humidity+"%";
@@ -725,6 +739,8 @@ function fourthHistoryButtonInfo(){
         dataCloud=data.current.cloud;
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
+        dataWeatherText=data.current.condition.text;
+        weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
         humidityText.innerText=data.current.humidity+"%";
@@ -763,6 +779,8 @@ function fifthHistoryButtonInfo(){
         dataCloud=data.current.cloud;
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
+        dataWeatherText=data.current.condition.text;
+        weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
         humidityText.innerText=data.current.humidity+"%";
@@ -785,7 +803,6 @@ function fifthHistoryButtonInfo(){
     })
     .catch(error=>alert("Favorite Zip Error"))
     };
-
 
 
 

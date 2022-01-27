@@ -158,11 +158,15 @@ body nav{
 }
 .weather-images-container{
   display: none;
-  padding-top: 10px;
 }
 .weather-images-container img{
   height: 120px;
   width: 120px;
+}
+.weather-images-container p{
+  margin-top: 0px;
+  font-size: 20px;
+  margin-bottom: 0px;
 }
 .weather-catagories-container{
   display: none;
