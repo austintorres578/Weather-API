@@ -27,13 +27,17 @@ const feel=document.getElementById("feels-like-text");
 //Weather Catagories and Images----------------------------------------------------------
 const weatherImagesContainer=document.getElementById("weather-images-container");
 const weatherCatagoriesContainer=document.getElementById("weather-catagories-container");
-let weatherImage=document.getElementById("weather-image");
+let weatherImage=document.querySelector(".weather-image");
+let weatherHourly = document.querySelectorAll(".weather-hourly");
 
 //Weather Menu Container----------------------------------------------------------------
+const weatherMenu = document.getElementById("weather-menu");
+const weatherHourlyContainer = document.getElementById("weather-hourly-container");
 const weatherMenuContainer = document.getElementById("weather-menu-container");
 const weatherInformationContainer=document.getElementById("weather-information-container");
 const weatherHistoryMenuDesk = document.getElementById("weather-history-menu-desk");
 const weatherHistoryList = document.getElementById("weather-history-list");
+let hourlyImageVar;
 
 // API Code List---------------------------------------------------------------------------
 const dataDayCodes=[
@@ -327,6 +331,107 @@ const dataDayCodes=[
 }
 ];
 
+// 12 Hour Clock to 24 Hour-----------------------------------------------------------------
+
+const timeConvert=[
+{
+    "24Hour": 0,
+    "12Hour": "12 AM"
+},
+{
+    "24Hour": 1,
+    "12Hour": "1 AM"
+},
+{
+    "24Hour": 2,
+    "12Hour": "2 AM"
+},
+{
+    "24Hour": 3,
+    "12Hour": "3 AM"
+},
+{
+    "24Hour": 4,
+    "12Hour": "4 AM"
+},
+{
+    "24Hour": 5,
+    "12Hour": "5 AM"
+},
+{
+    "24Hour": 6,
+    "12Hour": "6 AM"
+},
+{
+    "24Hour": 7,
+    "12Hour": "7 AM"
+},
+{
+    "24Hour": 8,
+    "12Hour": "8 AM"
+},
+{
+    "24Hour": 9,
+    "12Hour": "9 AM"
+},
+{
+    "24Hour": 10,
+    "12Hour": "10 AM"
+},
+{
+    "24Hour": 11,
+    "12Hour": "11 AM"
+},
+{
+    "24Hour": 12,
+    "12Hour": "12 PM"
+},
+{
+    "24Hour": 13,
+    "12Hour": "1 PM"
+},
+{
+    "24Hour": 14,
+    "12Hour": "2 PM"
+},
+{
+    "24Hour": 15,
+    "12Hour": "3 PM"
+},
+{
+    "24Hour": 16,
+    "12Hour": "4 PM"
+},
+{
+    "24Hour": 17,
+    "12Hour": "5 PM"
+},
+{
+    "24Hour": 18,
+    "12Hour": "6 PM"
+},
+{
+    "24Hour": 19,
+    "12Hour": "7 PM"
+},
+{
+    "24Hour": 20,
+    "12Hour": "8 PM"
+},
+{
+    "24Hour": 21,
+    "12Hour": "9 PM"
+},
+{
+    "24Hour": 22,
+    "12Hour": "10 PM"
+},
+{
+    "24Hour": 23,
+    "12Hour": "11 PM"
+}
+];
+
 //API Data variables----------------------------------------------------------------------
 
 let dataTemperture;
@@ -341,6 +446,9 @@ let dataCloud;
 let dataTimeDay;
 let dataTimeCode;
 let dataIconCode;
+let dataLocalTime;
+let dataEstTime;
+let dataEstConvertedTime;
 
 //Local storage variables --------------------------------------------------------------------------------
 
@@ -396,7 +504,7 @@ function settingStateHistoryArray(){
 submitButton.addEventListener("click",callApi);
 
 function callApi(){
-fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+zipInput.value+"&aqi=no")
+fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+zipInput.value+"&days=1&aqi=no&alerts=no")
 .then(Response => {
     console.log(Response.status)
     if(Response.status===400){
@@ -443,6 +551,11 @@ else{
     dataCloud=data.current.cloud;
     dataTimeDay=data.current.condition.icon;
     dataTemperture=data.current.temp_f+"℉";
+    dataLocalTime=data.location.localtime;
+    dataEstTime=parseInt(dataLocalTime.substring(11,13));
+        if(isNaN(dataEstTime)){
+            dataEstTime=parseInt(dataLocalTime.substring(11,12));
+        };
     weatherText.innerHTML=dataWeatherText;
     temperture.innerText=dataTemperture;
     locationText.innerText=dataLocationCity+", "+dataLocationState;
@@ -452,9 +565,26 @@ else{
     feel.innerText="Feels like "+dataFeel;
     dataTimeCode=data.current.condition.code;
 
+    function timeConverter(){
+        for (let i = 0;  timeConvert[i]["24Hour"]<=dataEstTime; i++){
+            dataEstConvertedTime=timeConvert[i]["12Hour"];
+            hourlyImageVar=timeConvert[i]["24Hour"]+1;
+        };  
+        for (let a = hourlyImageVar; a < weatherHourly.length; a++){
+            weatherHourly[a].style.display="block";
+            weatherHourly[a].lastElementChild.innerHTML=data.forecast.forecastday[0].hour[a].temp_f+"℉";
+            let weatherHourlyChildren=weatherHourly[a].children;
+            weatherHourlyChildren[1].src="https:"+data.forecast.forecastday[0].hour[a].condition.icon
+        };
+    };
+
     codeReciever();
     weatherImageMaker();
+    timeConverter();
+
 }).then(()=>{
+    weatherMenu.style.top="35%"
+    weatherHourlyContainer.style.display="flex";
     xButton.style.display="block";
     favoriteButton.style.display="block"
     weatherImagesContainer.style.display="block";
@@ -466,9 +596,8 @@ else{
 };
 
 function openFavorite(){
-    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+usableFavoriteZip+"&aqi=no")
+    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+usableFavoriteZip+"&days=1&aqi=no&alerts=no")
     .then(Response => {
-        console.log(Response.status);
         return Response.json();
     })
     .then(data => {
@@ -482,6 +611,11 @@ function openFavorite(){
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
         dataWeatherText=data.current.condition.text;
+        dataLocalTime=data.location.localtime;
+        dataEstTime=parseInt(dataLocalTime.substring(11,13));
+        if(isNaN(dataEstTime)){
+            dataEstTime=parseInt(dataLocalTime.substring(11,12));
+        };
         weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
@@ -490,12 +624,30 @@ function openFavorite(){
         ultravioletText.innerText=data.current.uv+"/10";
         feel.innerText="Feels like "+dataFeel;
         dataTimeCode=data.current.condition.code;
+        
+        
+
+        function timeConverter(){
+            for (let i = 0;  timeConvert[i]["24Hour"]<=dataEstTime; i++){
+                dataEstConvertedTime=timeConvert[i]["12Hour"];
+                hourlyImageVar=timeConvert[i]["24Hour"]+1;
+            };  
+            for (let a = hourlyImageVar; a < weatherHourly.length; a++){
+                weatherHourly[a].style.display="block";
+                weatherHourly[a].lastElementChild.innerHTML=data.forecast.forecastday[0].hour[a].temp_f+"℉";
+                let weatherHourlyChildren=weatherHourly[a].children;
+                weatherHourlyChildren[1].src="https:"+data.forecast.forecastday[0].hour[a].condition.icon
+            };
+        };
 
         console.log(data);
         codeReciever();
         weatherImageMaker();
+        timeConverter();
     })
     .then(()=>{
+        weatherMenu.style.top="35%"
+        weatherHourlyContainer.style.display="flex";
         xButton.style.display="block";
         unfavoriteButton.style.display="block"
         weatherImagesContainer.style.display="block";
@@ -529,6 +681,8 @@ function weatherImageMaker(){
 
 function closeZip(){
     zipInput.value="";
+    weatherMenu.style.top="50%"
+    weatherHourlyContainer.style.display="none";
     xButton.style.display="none";
     favoriteButton.style.display="none";
     weatherImagesContainer.style.display="none";
@@ -604,7 +758,7 @@ for (let i = 0; i < weatherHistoryButton.length; i++) {
 };
 
 function firstHistoryButtonInfo(){
-    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("firstHistoryButton").firstChild.innerHTML+"&aqi=no")
+    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("firstHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
     .then(Response => {
         console.log(Response.status);
         return Response.json();
@@ -620,6 +774,11 @@ function firstHistoryButtonInfo(){
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
         dataWeatherText=data.current.condition.text;
+        dataLocalTime=data.location.localtime;
+        dataEstTime=parseInt(dataLocalTime.substring(11,13));
+        if(isNaN(dataEstTime)){
+            dataEstTime=parseInt(dataLocalTime.substring(11,12));
+        };
         weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
@@ -629,10 +788,27 @@ function firstHistoryButtonInfo(){
         feel.innerText="Feels like "+dataFeel;
         dataTimeCode=data.current.condition.code;
 
+        function timeConverter(){
+            for (let i = 0;  timeConvert[i]["24Hour"]<=dataEstTime; i++){
+                dataEstConvertedTime=timeConvert[i]["12Hour"];
+                hourlyImageVar=timeConvert[i]["24Hour"]+1;
+            };  
+            for (let a = hourlyImageVar; a < weatherHourly.length; a++){
+                weatherHourly[a].style.display="block";
+                weatherHourly[a].lastElementChild.innerHTML=data.forecast.forecastday[0].hour[a].temp_f+"℉";
+                let weatherHourlyChildren=weatherHourly[a].children;
+                weatherHourlyChildren[1].src="https:"+data.forecast.forecastday[0].hour[a].condition.icon
+            };
+        };
+
         codeReciever();
         weatherImageMaker();
+        timeConverter();
+        
     })
     .then(()=>{
+        weatherMenu.style.top="35%"
+        weatherHourlyContainer.style.display="flex";
         xButton.style.display="block";
         unfavoriteButton.style.display="none";
         favoriteButton.style.display="block";
@@ -644,7 +820,7 @@ function firstHistoryButtonInfo(){
     .catch(error=>alert("Favorite Zip Error"))
     };
 function secondHistoryButtonInfo(){
-    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("secondHistoryButton").firstChild.innerHTML+"&aqi=no")
+    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("secondHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
     .then(Response => {
         console.log(Response.status);
         return Response.json();
@@ -660,6 +836,11 @@ function secondHistoryButtonInfo(){
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
         dataWeatherText=data.current.condition.text;
+        dataLocalTime=data.location.localtime;
+        dataEstTime=parseInt(dataLocalTime.substring(11,13));
+        if(isNaN(dataEstTime)){
+            dataEstTime=parseInt(dataLocalTime.substring(11,12));
+        };
         weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
@@ -669,10 +850,26 @@ function secondHistoryButtonInfo(){
         feel.innerText="Feels like "+dataFeel;
         dataTimeCode=data.current.condition.code;
 
+        function timeConverter(){
+            for (let i = 0;  timeConvert[i]["24Hour"]<=dataEstTime; i++){
+                dataEstConvertedTime=timeConvert[i]["12Hour"];
+                hourlyImageVar=timeConvert[i]["24Hour"]+1;
+            };  
+            for (let a = hourlyImageVar; a < weatherHourly.length; a++){
+                weatherHourly[a].style.display="block";
+                weatherHourly[a].lastElementChild.innerHTML=data.forecast.forecastday[0].hour[a].temp_f+"℉";
+                let weatherHourlyChildren=weatherHourly[a].children;
+                weatherHourlyChildren[1].src="https:"+data.forecast.forecastday[0].hour[a].condition.icon
+            };
+        };
+
         codeReciever();
         weatherImageMaker();
+        timeConverter();
     })
     .then(()=>{
+        weatherMenu.style.top="35%"
+        weatherHourlyContainer.style.display="flex";
         xButton.style.display="block";
         unfavoriteButton.style.display="none";
         favoriteButton.style.display="block";
@@ -684,7 +881,7 @@ function secondHistoryButtonInfo(){
     .catch(error=>alert("Favorite Zip Error"))
     };
 function thirdHistoryButtonInfo(){
-    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("thirdHistoryButton").firstChild.innerHTML+"&aqi=no")
+    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("thirdHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
     .then(Response => {
         console.log(Response.status);
         return Response.json();
@@ -700,6 +897,11 @@ function thirdHistoryButtonInfo(){
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
         dataWeatherText=data.current.condition.text;
+        dataLocalTime=data.location.localtime;
+        dataEstTime=parseInt(dataLocalTime.substring(11,13));
+        if(isNaN(dataEstTime)){
+            dataEstTime=parseInt(dataLocalTime.substring(11,12));
+        };
         weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
@@ -709,10 +911,26 @@ function thirdHistoryButtonInfo(){
         feel.innerText="Feels like "+dataFeel;
         dataTimeCode=data.current.condition.code;
 
+        function timeConverter(){
+            for (let i = 0;  timeConvert[i]["24Hour"]<=dataEstTime; i++){
+                dataEstConvertedTime=timeConvert[i]["12Hour"];
+                hourlyImageVar=timeConvert[i]["24Hour"]+1;
+            };  
+            for (let a = hourlyImageVar; a < weatherHourly.length; a++){
+                weatherHourly[a].style.display="block";
+                weatherHourly[a].lastElementChild.innerHTML=data.forecast.forecastday[0].hour[a].temp_f+"℉";
+                let weatherHourlyChildren=weatherHourly[a].children;
+                weatherHourlyChildren[1].src="https:"+data.forecast.forecastday[0].hour[a].condition.icon
+            };
+        };
+
         codeReciever();
         weatherImageMaker();
+        timeConverter();
     })
     .then(()=>{
+        weatherMenu.style.top="35%"
+        weatherHourlyContainer.style.display="flex";
         xButton.style.display="block";
         unfavoriteButton.style.display="none";
         favoriteButton.style.display="block";
@@ -724,7 +942,7 @@ function thirdHistoryButtonInfo(){
     .catch(error=>alert("Favorite Zip Error"))
     };
 function fourthHistoryButtonInfo(){
-    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("fourthHistoryButton").firstChild.innerHTML+"&aqi=no")
+    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("fourthHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
     .then(Response => {
         console.log(Response.status);
         return Response.json();
@@ -740,6 +958,11 @@ function fourthHistoryButtonInfo(){
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
         dataWeatherText=data.current.condition.text;
+        dataLocalTime=data.location.localtime;
+        dataEstTime=parseInt(dataLocalTime.substring(11,13));
+        if(isNaN(dataEstTime)){
+            dataEstTime=parseInt(dataLocalTime.substring(11,12));
+        };
         weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
@@ -749,10 +972,26 @@ function fourthHistoryButtonInfo(){
         feel.innerText="Feels like "+dataFeel;
         dataTimeCode=data.current.condition.code;
 
+        function timeConverter(){
+            for (let i = 0;  timeConvert[i]["24Hour"]<=dataEstTime; i++){
+                dataEstConvertedTime=timeConvert[i]["12Hour"];
+                hourlyImageVar=timeConvert[i]["24Hour"]+1;
+            };  
+            for (let a = hourlyImageVar; a < weatherHourly.length; a++){
+                weatherHourly[a].style.display="block";
+                weatherHourly[a].lastElementChild.innerHTML=data.forecast.forecastday[0].hour[a].temp_f+"℉";
+                let weatherHourlyChildren=weatherHourly[a].children;
+                weatherHourlyChildren[1].src="https:"+data.forecast.forecastday[0].hour[a].condition.icon
+            };
+        };
+
         codeReciever();
         weatherImageMaker();
+        timeConverter();
     })
     .then(()=>{
+        weatherMenu.style.top="35%"
+        weatherHourlyContainer.style.display="flex";
         xButton.style.display="block";
         unfavoriteButton.style.display="none";
         favoriteButton.style.display="block";
@@ -764,7 +1003,7 @@ function fourthHistoryButtonInfo(){
     .catch(error=>alert("Favorite Zip Error"))
     };
 function fifthHistoryButtonInfo(){
-    fetch("http://api.weatherapi.com/v1/current.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("fifthHistoryButton").firstChild.innerHTML+"&aqi=no")
+    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("fifthHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
     .then(Response => {
         console.log(Response.status);
         return Response.json();
@@ -780,6 +1019,11 @@ function fifthHistoryButtonInfo(){
         dataTimeDay=data.current.condition.icon;
         dataTemperture=data.current.temp_f+"℉";
         dataWeatherText=data.current.condition.text;
+        dataLocalTime=data.location.localtime;
+        dataEstTime=parseInt(dataLocalTime.substring(11,13));
+        if(isNaN(dataEstTime)){
+            dataEstTime=parseInt(dataLocalTime.substring(11,12));
+        };
         weatherText.innerHTML=dataWeatherText;
         temperture.innerText=dataTemperture;
         locationText.innerText=dataLocationCity+", "+dataLocationState;
@@ -789,10 +1033,26 @@ function fifthHistoryButtonInfo(){
         feel.innerText="Feels like "+dataFeel;
         dataTimeCode=data.current.condition.code;
 
+        function timeConverter(){
+            for (let i = 0;  timeConvert[i]["24Hour"]<=dataEstTime; i++){
+                dataEstConvertedTime=timeConvert[i]["12Hour"];
+                hourlyImageVar=timeConvert[i]["24Hour"]+1;
+            };  
+            for (let a = hourlyImageVar; a < weatherHourly.length; a++){
+                weatherHourly[a].style.display="block";
+                weatherHourly[a].lastElementChild.innerHTML=data.forecast.forecastday[0].hour[a].temp_f+"℉";
+                let weatherHourlyChildren=weatherHourly[a].children;
+                weatherHourlyChildren[1].src="https:"+data.forecast.forecastday[0].hour[a].condition.icon
+            };
+        };
+
         codeReciever();
         weatherImageMaker();
+        timeConverter();
     })
     .then(()=>{
+        weatherMenu.style.top="35%"
+        weatherHourlyContainer.style.display="flex";
         xButton.style.display="block";
         unfavoriteButton.style.display="none";
         favoriteButton.style.display="block";
@@ -806,5 +1066,5 @@ function fifthHistoryButtonInfo(){
 
 
 
-
+    
 
