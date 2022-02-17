@@ -3,7 +3,7 @@
 
 <p>Weather website that uses an API from https://www.weatherapi.com, that takes a valid USA Zipcode and displays various weather related information to user.</p>
 
-<h4>Information displayed<</h4>
+<h4>Information displayed</h4>
 
 <ul>
 <li>Temperture</li>
