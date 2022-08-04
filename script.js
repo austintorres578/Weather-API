@@ -504,7 +504,7 @@ function settingStateHistoryArray(){
 submitButton.addEventListener("click",callApi);
 
 function callApi(){
-fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+zipInput.value+"&days=1&aqi=no&alerts=no")
+fetch("https://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+zipInput.value+"&days=1&aqi=no&alerts=no")
 .then(Response => {
     console.log(Response.status)
     if(Response.status===400){
