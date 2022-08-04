@@ -596,7 +596,7 @@ else{
 };
 
 function openFavorite(){
-    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+usableFavoriteZip+"&days=1&aqi=no&alerts=no")
+    fetch("https://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+usableFavoriteZip+"&days=1&aqi=no&alerts=no")
     .then(Response => {
         return Response.json();
     })
@@ -758,7 +758,7 @@ for (let i = 0; i < weatherHistoryButton.length; i++) {
 };
 
 function firstHistoryButtonInfo(){
-    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("firstHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
+    fetch("https://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("firstHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
     .then(Response => {
         console.log(Response.status);
         return Response.json();
@@ -820,7 +820,7 @@ function firstHistoryButtonInfo(){
     .catch(error=>alert("Favorite Zip Error"))
     };
 function secondHistoryButtonInfo(){
-    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("secondHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
+    fetch("https://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("secondHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
     .then(Response => {
         console.log(Response.status);
         return Response.json();
@@ -881,7 +881,7 @@ function secondHistoryButtonInfo(){
     .catch(error=>alert("Favorite Zip Error"))
     };
 function thirdHistoryButtonInfo(){
-    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("thirdHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
+    fetch("https://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("thirdHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
     .then(Response => {
         console.log(Response.status);
         return Response.json();
@@ -942,7 +942,7 @@ function thirdHistoryButtonInfo(){
     .catch(error=>alert("Favorite Zip Error"))
     };
 function fourthHistoryButtonInfo(){
-    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("fourthHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
+    fetch("https://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("fourthHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
     .then(Response => {
         console.log(Response.status);
         return Response.json();
@@ -1003,7 +1003,7 @@ function fourthHistoryButtonInfo(){
     .catch(error=>alert("Favorite Zip Error"))
     };
 function fifthHistoryButtonInfo(){
-    fetch("http://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("fifthHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
+    fetch("https://api.weatherapi.com/v1/forecast.json?key=b28574dd6599479e944222901212812&q="+document.getElementById("fifthHistoryButton").firstChild.innerHTML+"&days=1&aqi=no&alerts=no")
     .then(Response => {
         console.log(Response.status);
         return Response.json();
